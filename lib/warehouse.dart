@@ -2,8 +2,8 @@
 library neo4j_dart.warehouse;
 
 import 'dart:async';
-import 'package:warehouse/adapters/graph.dart';
-import 'package:warehouse/graph.dart';
+import 'package:neo4j_dart/src/wh_pack/adapters/graph.dart';
+import 'package:neo4j_dart/src/wh_pack/graph.dart';
 
 import 'package:neo4j_dart/neo4j_dart.dart';
 

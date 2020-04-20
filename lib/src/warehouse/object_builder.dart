@@ -1,8 +1,8 @@
 library neo4j_dart.warehouse.instantiate;
 
 import 'dart:collection';
-import 'package:warehouse/adapters/base.dart';
-import 'package:warehouse/adapters/graph.dart';
+import 'package:neo4j_dart/src/wh_pack/adapters/base.dart';
+import 'package:neo4j_dart/src/wh_pack/adapters/graph.dart';
 
 class ObjectBuilder {
   final GraphDbSessionBase session;

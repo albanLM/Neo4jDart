@@ -1,8 +1,8 @@
 library neo4j_dart.warehouse.where_clause;
 
 import 'package:quiver/pattern.dart' show escapeRegex;
-import 'package:warehouse/warehouse.dart';
-import 'package:warehouse/adapters/base.dart';
+import 'package:neo4j_dart/src/wh_pack/warehouse.dart';
+import 'package:neo4j_dart/src/wh_pack/adapters/base.dart';
 
 String setParameter(Map parameters, value, LookingGlass lg) {
   var converter = lg.convertedTypes[value.runtimeType];
