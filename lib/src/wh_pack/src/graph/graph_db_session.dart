@@ -20,7 +20,7 @@ abstract class GraphDbSession<T> implements DbSession<T>, GraphRepository {
   ///
   /// [types] limits to entities only of only specified types, can be [List<Type>] or [Type]
   @override
-  Future deleteAll({Map where, types});
+  Future deleteAll({Map where, List<Type> types});
 
   /// Only updates edges from a node (creates new, deletes old edges).
   ///
@@ -32,14 +32,14 @@ abstract class GraphDbSession<T> implements DbSession<T>, GraphRepository {
   /// [types] limits to entities only of only specified types, can be [List<Type>] or [Type]
   /// [depth] specifies how relations should be resolved, see [findAll] for a description.
   @override
-  Future get(id, {types, depth: 1});
+  Future get(id, {List<Type> types, depth: 1});
 
   /// Get multiple entities by id.
   ///
   /// [types] limits to entities only of only specified types, can be [List<Type>] or [Type]
   /// [depth] specifies how relations should be resolved, see [findAll] for a description.
   @override
-  Future<List> getAll(Iterable ids, {types, depth: 0});
+  Future<List> getAll(Iterable ids, {List<Type> types, depth: 0});
 
   /// Find a single entity by a query.
   ///
