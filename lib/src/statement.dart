@@ -25,7 +25,10 @@ class Statement {
   Statement(this.cypher, [this.parameters, this.resultDataContents]);
 
   Map toJson() {
-    var json = {'statement': cypher};
+    // var json = {'statement': cypher};
+    var json = new Map();
+    json['statement'] = cypher;
+
     if (parameters != null) {
       json['parameters'] = parameters;
     }
