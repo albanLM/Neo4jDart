@@ -1,0 +1,8 @@
+library neo4j_dart.warehouse.warehouse.adapter.conformance_tests.session_factory;
+
+import 'package:warehouse/graph.dart';
+import 'package:warehouse/warehouse.dart';
+
+typedef DbSession SessionFactory();
+typedef GraphDbSession GraphSessionFactory();
+typedef Repository RepositoryFactory(DbSession session, Type type);
