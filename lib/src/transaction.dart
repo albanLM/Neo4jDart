@@ -60,7 +60,7 @@ class Transaction {
     // response = new Map();
     // response_test = json.decode(body);
 
-    Map<String, dynamic> response = jsonDecode(body);
+    var response = jsonDecode(body);
 
     if (response['errors'].isNotEmpty) {
       throw new Neo4jException(response);

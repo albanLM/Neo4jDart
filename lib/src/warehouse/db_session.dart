@@ -255,6 +255,8 @@ class Neo4jSession extends GraphDbSessionBase<Neo4j> {
             'id': operation.id,
           }));
           break;
+        case OperationType.delete:
+          break;
       }
     }
 
