@@ -61,12 +61,14 @@ class ObjectBuilder {
       if (row.containsKey('row')) {
         hasRow = true;
       }
+
+      var row_tmp;
       if (row.containsKey('graph')) {
-        row = row['graph'];
+        row_tmp = row['graph'];
         buildGraph(instances, edges, row['nodes'], row['relationships']);
       } else if (row.containsKey('row')) {
-        row = row['row'];
-        buildNode(instances, row[1], row[0]);
+        row_tmp = row['row'];
+        buildNode(instances, row_tmp[1], row_tmp[0]);
       } else {
         throw 'Result must contain graph or row data';
       }
