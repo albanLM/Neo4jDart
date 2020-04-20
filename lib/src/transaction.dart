@@ -38,19 +38,29 @@ class Transaction {
 
     var url = commit? '$_url/commit' : _url;
 
-    var response = await httpClient.post(url, headers: _headers, body: body);
+    var response_test = await httpClient.post(url, headers: _headers, body: body);
 
-    if (response.statusCode == 201) {
-      _url = response.headers['location'];
+    if (response_test.statusCode == 201) {
+      _url = response_test.headers['location'];
     }
 
-    body = utf8.decode(response.bodyBytes);
+    body = utf8.decode(response_test.bodyBytes);
 
-    if (response.statusCode >= 400) {
-      throw 'Status Code: ${response.statusCode}, body: $body';
+    if (response_test.statusCode >= 400) {
+      throw 'Status Code: ${response_test.statusCode}, body: $body';
     }
-
+    /*
     response = json.decode(body);
+
+    if (response['errors'].isNotEmpty) {
+      throw new Neo4jException(response);
+    }
+    return response['results'];
+    */
+    // response = new Map();
+    // response_test = json.decode(body);
+
+    Map<String, dynamic> response = jsonDecode(body);
 
     if (response['errors'].isNotEmpty) {
       throw new Neo4jException(response);

@@ -43,7 +43,7 @@ class Is {
   static Is greaterThan(num expected) => new Is('{field} > {value}', expected);
   /// Allows values which are greater than or equal to [expected]
   static Is greaterThanOrEqualTo(num expected) => new Is('{field} >= {value}', expected);
-
+/*
   /// Allows values which are equal to [expected]
   operator ==(expected) => equalTo(expected);
   /// Allows values which are less than [expected]
@@ -54,6 +54,7 @@ class Is {
   operator >(num expected) => greaterThan(expected);
   /// Allows values which are greater than or equal to [expected]
   operator >=(num expected) => greaterThanOrEqualTo(expected);
+ */
 }
 
 /// A constant instance of [Is] that is used for the operator comparisons
