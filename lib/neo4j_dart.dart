@@ -7,7 +7,7 @@ library neo4j_dart;
 import 'dart:async';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
-import 'package:http/http.dart' show IOClient;
+import 'package:http/io_client.dart' show IOClient;
 
 part 'src/db.dart';
 part 'src/exceptions.dart';

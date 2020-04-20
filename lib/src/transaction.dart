@@ -32,7 +32,7 @@ class Transaction {
 
   /// Runs multiple cypher queries in this transaction
   Future<List<Map<String, List>>> cypherStatements(List<Statement> statements, {bool commit: false}) async {
-    var body = JSON.encode({
+    var body = json.encode({
       'statements' : statements.map((statement) => statement.toJson()).toList(growable: false)
     });
 
@@ -44,13 +44,13 @@ class Transaction {
       _url = response.headers['location'];
     }
 
-    body = UTF8.decode(response.bodyBytes);
+    body = utf8.decode(response.bodyBytes);
 
     if (response.statusCode >= 400) {
       throw 'Status Code: ${response.statusCode}, body: $body';
     }
 
-    response = JSON.decode(body);
+    response = json.decode(body);
 
     if (response['errors'].isNotEmpty) {
       throw new Neo4jException(response);
