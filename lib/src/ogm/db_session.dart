@@ -311,75 +311,87 @@ class DbSession {
   _instantiateGraph(Map<int, InstanceMirror> objects, ClassMirror cm, Map<String, Map<String, List<Map>>> graph) {
     var notInstantiated = {};
 
-    for (Map node in graph['nodes']) {
-      node['id'] = int.parse(node['id']);
-      var className = MirrorSystem.getName(cm.simpleName);
+    for (List<Map> mapList in graph['nodes'].values) {
+      for (Map node in mapList) {
+        node['id'] = int.parse(node['id']);
+        var className = MirrorSystem.getName(cm.simpleName);
 
-      if ((node['properties'].containsKey('@class') && node['properties'].containsKey('@library')) ||
-          node['labels'].contains(className)) {
-        _instantiateObject(objects, cm, node['properties'], node['id']);
-      } else {
-        notInstantiated[node['id']] = node['properties'];
+        if ((node['properties'].containsKey('@class') &&
+            node['properties'].containsKey('@library')) ||
+            node['labels'].contains(className)) {
+          _instantiateObject(objects, cm, node['properties'], node['id']);
+        } else {
+          notInstantiated[node['id']] = node['properties'];
+        }
       }
     }
 
-    for (Map relation in graph['relationships']) {
-      var startId = int.parse(relation['startNode']);
-      var edgeId = int.parse(relation['id']);
-      var endId = int.parse(relation['endNode']);
+    for (List<Map> mapList in graph['relationships'].values) {
+      for (Map relation in mapList) {
+        var startId = int.parse(relation['startNode']);
+        var edgeId = int.parse(relation['id']);
+        var endId = int.parse(relation['endNode']);
 
-      InstanceMirror start = objects[startId];
-      InstanceMirror end = objects[endId];
+        InstanceMirror start = objects[startId];
+        InstanceMirror end = objects[endId];
 
-      Map<Symbol, DeclarationMirror> startDeclarations;
+        Map<Symbol, DeclarationMirror> startDeclarations;
 
-      var startFieldName = new Symbol(relation['type']);
-      var endFieldName;
+        var startFieldName = new Symbol(relation['type']);
+        var endFieldName;
 
-      if (start == null && end == null) continue;
+        if (start == null && end == null) continue;
 
-      if (end == null) {
-        end = _findOtherObject(objects, notInstantiated[endId], start, startFieldName, #end, endId);
-      }
-
-      try {
-        endFieldName = end.type.declarations.values.firstWhere((dm) =>
-        _isReverseRelation(dm, startFieldName)).simpleName;
-
-        if (start == null) {
-          start = _findOtherObject(
-              objects, notInstantiated[startId], end, endFieldName, #start, startId
-          );
+        if (end == null) {
+          end = _findOtherObject(
+              objects, notInstantiated[endId], start, startFieldName, #end,
+              endId);
         }
-      } on StateError catch(e) {
-        // StateError means that there doesn't exist any reverse field, which is okay.
-      }
 
-      startDeclarations = _getDeclarations(start.type);
+        try {
+          endFieldName = end.type.declarations.values.firstWhere((dm) =>
+              _isReverseRelation(dm, startFieldName)).simpleName;
 
-      if (_hasRelationObject(startDeclarations[startFieldName])) {
-        _keepRelation(start.reflectee, startFieldName, edgeId);
-
-        var edgeType = _getType(startDeclarations[startFieldName]);
-        if (_canSetType(startDeclarations, startFieldName, List)) {
-          edgeType = edgeType.typeArguments.first;
+          if (start == null) {
+            start = _findOtherObject(
+                objects, notInstantiated[startId], end, endFieldName, #start,
+                startId
+            );
+          }
+        } on StateError catch (e) {
+          // StateError means that there doesn't exist any reverse field, which is okay.
         }
-        _instantiateObject(objects, edgeType, relation['properties'], edgeId);
-        var edge = objects[edgeId];
-        _setField(start, startFieldName, edge.reflectee, declarations: startDeclarations);
 
-        edge.setField(#start, start.reflectee);
-        edge.setField(#end, end.reflectee);
+        startDeclarations = _getDeclarations(start.type);
 
-        start = edge;
-      } else {
-        _keepRelation(start.reflectee, startFieldName, edgeId, entityId(end.reflectee));
-        _setField(start, startFieldName, end.reflectee, declarations: startDeclarations);
-      }
+        if (_hasRelationObject(startDeclarations[startFieldName])) {
+          _keepRelation(start.reflectee, startFieldName, edgeId);
 
-      if (endFieldName != null) {
-        _keepRelation(end.reflectee, endFieldName, edgeId, entityId(start.reflectee));
-        _setField(end, endFieldName, start.reflectee);
+          var edgeType = _getType(startDeclarations[startFieldName]);
+          if (_canSetType(startDeclarations, startFieldName, List)) {
+            edgeType = edgeType.typeArguments.first;
+          }
+          _instantiateObject(objects, edgeType, relation['properties'], edgeId);
+          var edge = objects[edgeId];
+          _setField(start, startFieldName, edge.reflectee,
+              declarations: startDeclarations);
+
+          edge.setField(#start, start.reflectee);
+          edge.setField(#end, end.reflectee);
+
+          start = edge;
+        } else {
+          _keepRelation(
+              start.reflectee, startFieldName, edgeId, entityId(end.reflectee));
+          _setField(start, startFieldName, end.reflectee,
+              declarations: startDeclarations);
+        }
+
+        if (endFieldName != null) {
+          _keepRelation(
+              end.reflectee, endFieldName, edgeId, entityId(start.reflectee));
+          _setField(end, endFieldName, start.reflectee);
+        }
       }
     }
   }

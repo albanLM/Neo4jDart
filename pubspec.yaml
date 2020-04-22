@@ -12,4 +12,4 @@ dependencies:
 #  warehouse: ">=0.1.2 <0.2.0"
 environment:
   # Works in 2.1 but not 2.0.
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: '>=2.2.0 <3.0.0'
